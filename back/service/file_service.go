@@ -10,9 +10,8 @@ import (
 )
 
 type fileService struct {
-	idLen       int
-	fileRepo    interfaces.FileRepo
-	fileStorage interfaces.FileStorage
+	idLen    int
+	fileRepo interfaces.FileRepo
 }
 
 var symbolRange = []byte(
@@ -31,7 +30,7 @@ func genRandString(n int) string {
 func (s *fileService) PutFile(filename string, blob *[]byte) error {
 	if len(filename) == 0 {
 		log.Println("Got empty filename.")
-		return errors.New("filename mustn't be empty")
+		return NewUserError("filename mustn't be empty")
 	}
 
 	var id string
@@ -46,8 +45,10 @@ func (s *fileService) PutFile(filename string, blob *[]byte) error {
 	}
 
 	file := models.NewFile(id, filename, blob)
-	s.fileRepo.Save(&file)
-	s.fileStorage.Save(&file)
+	err := s.fileRepo.Save(&file)
+	if err != nil {
+		return NewInternalError("internal error")
+	}
 	return nil
 }
 
@@ -70,9 +71,5 @@ func (s *fileService) GetFile(id string) (string, *[]byte, error) {
 	if err != nil {
 		return "", &[]byte{}, handleRepoError(err)
 	}
-	blob, err := s.fileStorage.GetByIdentifier(id)
-	if err != nil {
-		return "", &[]byte{}, NewInternalError("internal error")
-	}
-	return file.FileName, blob, nil
+	return file.FileName, file.Blob, nil
 }
