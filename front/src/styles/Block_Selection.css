@@ -1,0 +1,33 @@
+.block {
+    height: 100%;
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 5px 45px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+  }
+
+  .block__item {
+    width: 50%;
+  }
+
+  .block-item {
+    text-align: center;
+  }
+
+  .block-item__title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .block-item__btn {
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #c42880d0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+  }

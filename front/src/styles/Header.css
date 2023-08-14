@@ -1,0 +1,54 @@
+header .logo {
+    font-weight: 600;
+    font-size: 20px;
+  }
+  
+  header ul.nav {
+    float: right;
+    list-style: none;
+  }
+  
+  header ul.nav li {
+    display: inline;
+    margin-left: 25px;
+    cursor: pointer;
+    transition: opacity 500 ease;
+  }
+  
+  header ul.nav li:hover {
+    opacity: 0.5;
+  
+  }
+  
+  header .presentation {
+    margin: 50px 0;
+    background: url('../img/contacts3.jpg') no-repeat;
+    width: 100%;
+    height: 500px;
+    background-size: cover;
+    background-position: center center;
+    background-blend-mode: multiply;
+    background-color: #bcbcbc;
+    position: relative;
+  }
+  
+  header .presentation::after {
+    content: 'Передача файлов';
+    position: absolute;
+    top: 100px;
+    left: 50px;
+    color: white;
+    width: 400px;
+    font-size: 40px;
+    font-weight: 600;
+  }
+  header .presentation::before {
+    content: 'без регистрации';
+    position: absolute;
+    top: 160px;
+    left: 300px;
+    color: white;
+    width: 300px;
+    font-size: 15px;
+    font-weight: 300;
+  }

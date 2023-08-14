@@ -1,0 +1,74 @@
+.form {
+    width: 100%;
+    padding: 50px;
+    font-size: 16px;
+    position: absolute;
+    transition: 0.5s;
+  }
+
+  .form_load {
+    left: 0;
+    transition-delay: 0.25s;
+}
+
+.form_download {
+    left: 100%;
+    transition-delay: 0s;
+}
+
+.form-box.active .form_load {
+    left: -100%;
+    transition-delay: 0s;
+  }
+
+.form-box.active .form_download {
+    left: 0;
+    transition-delay: 0.25s;
+}
+
+.form-title {
+    font: 2em;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.form_input {
+    width: 100%;
+    padding: 10px;
+    border: solid 1px #333;
+    font-size: inherit;
+    margin-bottom: 10px;
+}
+
+.form__btn {
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+    background-color: #c42880d0;
+    color: #fff;
+    padding: 10px 50px;
+  }
+
+.from__btn_download {
+    background-color: #f43648;
+}
+
+.key-title {
+    margin-bottom: 30px;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.key {
+    font-size: 17px;
+    font-weight: 600;
+    border: solid 3px #c42880d0;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.hidden {
+    display:none;
+}
+
