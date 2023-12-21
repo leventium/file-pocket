@@ -9,7 +9,7 @@ CREATED = Response(
 FILE_NOT_FOUND = Response(
     status_code=status.HTTP_404_NOT_FOUND,
     media_type="application/json",
-    content={"error": "file not found."}
+    content={"error": "file not found."},
 )
 
 FILE_TOO_LARGE = Response(
@@ -18,5 +18,5 @@ FILE_TOO_LARGE = Response(
     content={
         "error": "file too large.",
         "file_maxsize": int(os.environ["FILE_MAXSIZE"]),
-    }
+    },
 )
