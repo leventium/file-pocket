@@ -1,12 +1,12 @@
 import os
 from multiprocessing import Process
-from prepare import logger
+
+import cleaner
 import uvicorn
 from fastapi import FastAPI
+from prepare import logger
 from web.database import engine, init_schema
 from web.routers import file_router
-import cleaner
-
 
 app = FastAPI()
 app.include_router(file_router)

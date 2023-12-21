@@ -1,9 +1,9 @@
 import os
+
+import models
 from sqlalchemy import URL
 from sqlalchemy.engine import Engine
 from sqlmodel import SQLModel, create_engine
-import models
-
 
 engine = create_engine(URL.create(
     "postgresql+psycopg2",

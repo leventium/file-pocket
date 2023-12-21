@@ -1,7 +1,7 @@
-from fastapi import UploadFile
-from models import RWFile
 from crud import FileCRUD
 from database import engine
+from fastapi import UploadFile
+from models import RWFile
 
 
 async def get_file(file: UploadFile) -> RWFile:

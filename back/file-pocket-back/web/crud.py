@@ -1,11 +1,11 @@
+from datetime import datetime, timedelta
 from random import choice
-from datetime import timedelta, datetime
 from typing import Optional
-from prepare import logger
-from sqlmodel import Session, delete, func, select
-from sqlalchemy.engine import Engine
-from models import File, RWFile
 
+from models import File, RWFile
+from prepare import logger
+from sqlalchemy.engine import Engine
+from sqlmodel import Session, func, select
 
 ID_SYMBOLS = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890"
 

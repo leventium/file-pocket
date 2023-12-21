@@ -1,8 +1,9 @@
-from time import sleep
-from datetime import timedelta
 import sys
+from datetime import timedelta
+from signal import SIGTERM, signal
+from time import sleep
+
 from prepare import logger
-from signal import signal, SIGTERM
 from sqlalchemy.engine import Engine
 from web.crud import FileCRUD
 

@@ -1,6 +1,6 @@
 import os
-from fastapi import Response, status
 
+from fastapi import Response, status
 
 CREATED = Response(
     status_code=status.HTTP_201_CREATED,
