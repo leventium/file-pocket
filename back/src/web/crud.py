@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from random import choice
 from typing import Optional
@@ -9,6 +10,7 @@ from sqlmodel import Session, func, select
 from .models import File, RWFile
 
 ID_SYMBOLS = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890"
+FILEID_LEN = int(os.getenv("FILEID_LEN", "10"))
 
 
 class FileCRUD:
@@ -21,7 +23,7 @@ class FileCRUD:
         id_ok = False
         while not id_ok:
             res = ""
-            for _ in range(10):
+            for _ in range(FILEID_LEN):
                 res += choice(ID_SYMBOLS)
             with Session(self.engine) as session:
                 id_exists = session.exec(
