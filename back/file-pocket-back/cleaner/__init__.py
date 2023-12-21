@@ -1,1 +1,1 @@
-from .cleaner import main
+from .cleaner import main  # noqa: F401

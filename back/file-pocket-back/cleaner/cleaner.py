@@ -4,12 +4,12 @@ from signal import SIGTERM, signal
 from time import sleep
 
 from prepare import logger
-from sqlalchemy.engine import Engine
 from web.crud import FileCRUD
+from web.database import engine
 
 
-def main(engine: Engine):
-    logger.info("Starting file prunign service.")
+def main():
+    logger.info("Starting file pruning service.")
     signal(SIGTERM, lambda num, frame: sys.exit())
     crud = FileCRUD(engine)
     while True:

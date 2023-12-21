@@ -1,11 +1,12 @@
 import os
 from asyncio import sleep
 
-from crud import FileCRUD
-from dependencies import get_file, get_file_crud
 from fastapi import APIRouter, Depends
-from models import RWFile
-from responses import CREATED, FILE_NOT_FOUND, FILE_TOO_LARGE
+
+from .crud import FileCRUD
+from .dependencies import get_file, get_file_crud
+from .models import RWFile
+from .responses import CREATED, FILE_NOT_FOUND, FILE_TOO_LARGE
 
 file_router = APIRouter(prefix="/api/v1/file_service")
 

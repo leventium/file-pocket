@@ -1,9 +1,10 @@
 import os
 
-import models
 from sqlalchemy import URL
 from sqlalchemy.engine import Engine
 from sqlmodel import SQLModel, create_engine
+
+from . import models  # noqa: F401
 
 engine = create_engine(
     URL.create(
