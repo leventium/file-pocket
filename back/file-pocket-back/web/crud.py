@@ -16,6 +16,7 @@ class FileCRUD:
         self.engine = engine
 
     def _create_id(self) -> str:
+        logger.debug("Starting creation of ID.")
         res = ""
         id_ok = False
         while not id_ok:
@@ -27,7 +28,10 @@ class FileCRUD:
                     select(func.count("*")).select_from(File).where(File.id == res)
                 ).first()
             if id_exists == 0:
+                logger.debug(f"'{res}' created.")
                 id_ok = True
+            else:
+                logger.debug(f"'{res}' already exists, retrying...")
         return res
 
     def save_file(self, file: RWFile):
@@ -46,7 +50,7 @@ class FileCRUD:
         with Session(self.engine) as session:
             res = session.exec(select(File).where(File.id == id)).first()
             if res is not None:
-                logger.info(f"'{id}' saved.")
+                logger.info(f"'{id}' found. Giving to user...")
                 session.delete(res)
                 session.commit()
             return res

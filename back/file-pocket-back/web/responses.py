@@ -3,6 +3,16 @@ import os
 from fastapi import Response, status
 from fastapi.responses import JSONResponse
 
+def get_file_responce(file: bytes, filename: str) -> Response:
+    return Response(
+        content=file,
+        headers={
+            'Content-Disposition': f'attachment; filename="{filename}"'
+        },
+        media_type="application/octet-stream",
+        status_code=status.HTTP_200_OK,
+    )
+
 CREATED = Response(
     status_code=status.HTTP_201_CREATED,
 )
