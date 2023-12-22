@@ -57,7 +57,8 @@ class FileCRUD:
 
     def delete_expired(self, exp_time: timedelta):
         exp_files = self.session.exec(
-            select(File).where(File.created_at + exp_time > datetime.now())
+            select(File)
+            .where(File.created_at < datetime.now() - exp_time)
         ).all()
         for file in exp_files:
             logger.info(f"Deleting file '{file.id}'.")
