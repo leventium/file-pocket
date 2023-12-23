@@ -4,7 +4,7 @@ from signal import SIGTERM, signal
 from time import sleep
 
 from sqlmodel import Session
-from prepare import logger
+from config import logger
 from web.crud import FileCRUD
 from web.database import engine
 

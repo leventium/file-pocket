@@ -5,7 +5,7 @@ from multiprocessing import Process
 import uvicorn
 from fastapi import FastAPI
 
-from prepare import logger
+from config import logger
 from web.database import engine, init_schema
 from web.routers import file_router
 import cleaner

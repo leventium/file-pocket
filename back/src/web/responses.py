@@ -1,7 +1,7 @@
-import os
-
 from fastapi import Response, status
 from fastapi.responses import JSONResponse
+
+from config import FILE_MAXSIZE
 
 def get_file_responce(file: bytes, filename: str) -> Response:
     return Response(
@@ -27,7 +27,7 @@ FILE_TOO_LARGE = JSONResponse(
     content={
         "error": {
             "message": "file too large.",
-            "file_maxsize": int(os.environ["FILE_MAXSIZE"]),
+            "file_maxsize": FILE_MAXSIZE,
         }
     },
 )

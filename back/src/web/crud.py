@@ -1,15 +1,13 @@
-import os
 from datetime import datetime, timedelta
 from random import choice
 from typing import Optional
 
-from prepare import logger
+from config import logger, FILEID_LEN
 from sqlmodel import Session, func, select
 
 from .models import File, RWFile
 
 ID_SYMBOLS = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890"
-FILEID_LEN = int(os.getenv("FILEID_LEN", "10"))
 
 
 class FileCRUD:

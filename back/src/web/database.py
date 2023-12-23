@@ -1,9 +1,7 @@
-import os
-
 from sqlalchemy import URL
 from sqlalchemy.engine import Engine
 from sqlmodel import SQLModel, create_engine
-from prepare import logger
+from config import logger, PG_USER, PG_PASSWORD, PG_HOST, PG_DB, PG_PORT
 
 from . import models  # noqa: F401
 
@@ -11,11 +9,11 @@ logger.debug("Creating database engine.")
 engine = create_engine(
     URL.create(
         "postgresql+psycopg2",
-        username=os.environ["PG_USER"],
-        password=os.environ["PG_PASSWORD"],
-        host=os.environ["PG_HOST"],
-        port=int(os.environ["PG_PORT"]),
-        database=os.environ["PG_DB"],
+        username=PG_USER,
+        password=PG_PASSWORD,
+        host=PG_HOST,
+        port=PG_PORT,
+        database=PG_DB,
     )
 )
 

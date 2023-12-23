@@ -1,8 +1,7 @@
-import os
 from asyncio import sleep
 
 from fastapi import APIRouter, Depends
-from prepare import logger
+from config import logger, FILE_MAXSIZE_IN_BYTES
 
 from .crud import FileCRUD
 from .dependencies import get_file, get_file_crud
@@ -10,9 +9,6 @@ from .models import RWFile
 from . import responses as resp
 
 file_router = APIRouter(prefix="/api/v1/file_service")
-
-
-FILE_MAXSIZE_IN_BYTES = int(os.environ["FILE_MAXSIZE"]) * 1024**2
 
 
 @file_router.post("/file")
