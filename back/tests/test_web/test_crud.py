@@ -6,7 +6,6 @@ from sqlmodel import SQLModel, create_engine, Session, select, func
 from web.models import File, RWFile
 from web.crud import FileCRUD, ID_SYMBOLS, FILEID_LEN
 
-
 engine = create_engine("sqlite://")
 
 
