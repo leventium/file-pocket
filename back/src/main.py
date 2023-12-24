@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from config import logger
 from web.database import engine, init_schema
 from web.routers import file_router
+from web.exceptions import register_exceptions
 import cleaner
 
 
@@ -21,6 +22,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(file_router)
+register_exceptions(app)
 
 
 if __name__ == "__main__":

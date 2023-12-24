@@ -5,6 +5,7 @@ from config import logger, FILE_MAXSIZE_IN_BYTES
 
 from .crud import FileCRUD
 from .dependencies import get_file, get_file_crud
+from . import exceptions as exc
 from .models import RWFile
 from . import responses as resp
 
@@ -18,13 +19,13 @@ async def put_file(
     logger.info("POST /file")
     if len(file.blob) > FILE_MAXSIZE_IN_BYTES:
         logger.info(
-            f"File too large: {file.blob}B resieved. "
+            f"File too large: {len(file.blob)}B resieved. "
             f"{FILE_MAXSIZE_IN_BYTES}B - maximum. Aborting..."
         )
-        return resp.FILE_TOO_LARGE
+        raise exc.TooLargeFileError(file_size=len(file.blob))
     logger.info("Saving file to DB...")
-    crud.save_file(file)
-    return resp.CREATED
+    new_id = crud.save_file(file)
+    return resp.get_success_response(new_id)
 
 
 @file_router.get("/file")
@@ -35,6 +36,6 @@ async def recieve_file(file_id: str, crud: FileCRUD = Depends(get_file_crud)):
     res = crud.get_file_by_id(file_id)
     if res is None:
         logger.info(f"'{file_id}' not found...")
-        return resp.FILE_NOT_FOUND
+        raise exc.NotFoundError()
     logger.info(f"Sending '{file_id}' to user...")
-    return resp.get_file_responce(res.blob, res.filename)
+    return resp.get_file_response(res.blob, res.filename)

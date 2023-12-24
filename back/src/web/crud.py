@@ -34,21 +34,22 @@ class FileCRUD:
                 logger.debug(f"'{res}' already exists, retrying...")
         return res
 
-    def save_file(self, file: RWFile):
+    def save_file(self, file: RWFile) -> str:
         db_file = File(
             id=self._create_id(),
             filename=file.filename,
             blob=file.blob,
             created_at=datetime.now(),
         )
-        logger.info(f"'{db_file.id}' saved.")
         self.session.add(db_file)
         self.session.commit()
+        logger.debug(f"'{db_file.id}' saved.")
+        return db_file.id
 
     def get_file_by_id(self, id: str) -> Optional[File]:
         res = self.session.exec(select(File).where(File.id == id)).first()
         if res is not None:
-            logger.info(f"'{id}' found. Giving to user...")
+            logger.debug(f"'{id}' found. Giving to user...")
             self.session.delete(res)
             self.session.commit()
         return res
@@ -59,6 +60,6 @@ class FileCRUD:
             .where(File.created_at < datetime.now() - exp_time)
         ).all()
         for file in exp_files:
-            logger.info(f"Deleting file '{file.id}'.")
+            logger.debug(f"Deleting file '{file.id}'.")
             self.session.delete(file)
         self.session.commit()
