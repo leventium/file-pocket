@@ -23,7 +23,7 @@ async def handle_too_large_file(req: Request, exc: TooLargeFileError):
             message="File too large.",
             file_maxsize=FILE_MAXSIZE,
             recieved_size=exc.file_size // 1024**2,
-        ).dict(),
+        ).model_dump(),
     )
 
 
@@ -35,10 +35,10 @@ class Message(BaseModel):
     message: str
 
 
-async def handle_not_found(req: Request, ecx: NotFoundError):
+async def handle_not_found(req: Request, exc: NotFoundError):
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
-        content=Message(message="File not found.").dict(),
+        content=Message(message="File not found.").model_dump(),
     )
 
 

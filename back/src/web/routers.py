@@ -9,7 +9,7 @@ from . import exceptions as exc
 from .models import RWFile
 from . import responses as resp
 
-file_router = APIRouter(prefix="/api/v1/file_service")
+file_router = APIRouter(prefix="/file-service")
 
 
 @file_router.post("/file")
