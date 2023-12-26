@@ -6,7 +6,8 @@ from sqlmodel import SQLModel, create_engine, Session, select, func
 from web.models import File, RWFile
 from web.crud import FileCRUD, ID_SYMBOLS, FILEID_LEN
 
-engine = create_engine("sqlite://")
+engine = create_engine("sqlite:///tests/dbs/test_crud.db")
+SQLModel.metadata.drop_all(engine)
 
 
 @pytest.fixture
@@ -17,9 +18,6 @@ def get_conn():
     SQLModel.metadata.drop_all(engine)
 
 
-rows = [
-    (ID_SYMBOLS[1] * FILEID_LEN, ID_SYMBOLS[1] * FILEID_LEN, ID_SYMBOLS[1] * FILEID_LEN)
-]
 rows = [
     (
         ID_SYMBOLS[1] * FILEID_LEN,
@@ -66,19 +64,25 @@ class TestFileCRUD:
     def test_save_file(self, insert_test_data: Session):
         crud = FileCRUD(insert_test_data)
 
-        crud.save_file(
+        file_id = crud.save_file(
             RWFile(
                 filename="simple_name",
                 blob=b"interesting_content",
             )
         )
 
-        assert insert_test_data.exec(
-            select(func.count("*"))
-            .select_from(File)
-            .where(File.filename == "simple_name")
-            .where(File.blob == b"interesting_content")
-        ).first() == 1
+        assert len(file_id) == FILEID_LEN
+        for c in file_id:
+            assert c in ID_SYMBOLS
+        assert (
+            insert_test_data.exec(
+                select(func.count("*"))
+                .select_from(File)
+                .where(File.filename == "simple_name")
+                .where(File.blob == b"interesting_content")
+            ).first()
+            == 1
+        )
 
     def test_get_file_by_id_ok(self, insert_test_data: Session):
         crud = FileCRUD(insert_test_data)
@@ -91,10 +95,10 @@ class TestFileCRUD:
         ).first()
 
         assert (
-            res is not None and
-            res.filename == "aboba.jpg" and
-            res.blob == b"aboba" and
-            row_count == 0
+            res is not None
+            and res.filename == "aboba.jpg"
+            and res.blob == b"aboba"
+            and row_count == 0
         )
 
     def test_get_file_by_id_fail(self, insert_test_data: Session):
@@ -109,7 +113,10 @@ class TestFileCRUD:
 
         crud.delete_expired(timedelta(days=1))
 
-        assert insert_test_data.exec(
-            select(func.count("*"))
-            .select_from(File)
-        ).first() == 2
+        assert (
+            insert_test_data.exec(
+                select(func.count("*"))
+                .select_from(File)
+            ).first()
+            == 2
+        )
