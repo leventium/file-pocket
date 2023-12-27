@@ -13,6 +13,8 @@ logger.add("logs/info.log", level=_LOG_LEVEL, rotation="10 MB")
 logger.add("logs/error.log", level="ERROR", rotation="10 MB")
 
 
+PROXY_PATH = os.getenv("PROXY_PATH", "")
+
 PG_USER = os.getenv("PG_USER", "postgres")
 PG_PASSWORD = os.environ["PG_PASSWORD"]
 PG_HOST = os.getenv("PG_HOST", "localhost")

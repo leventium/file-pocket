@@ -1,13 +1,15 @@
+from urllib.parse import quote
 from fastapi import Response, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 
 def get_file_response(file: bytes, filename: str) -> Response:
+    escaped_name = quote(filename, safe="")
     return Response(
         content=file,
         headers={
-            'Content-Disposition': f'attachment; filename="{filename}"'
+            'Content-Disposition': f'attachment; filename="{escaped_name}"'
         },
         media_type="application/octet-stream",
         status_code=status.HTTP_200_OK,
