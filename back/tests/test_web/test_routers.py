@@ -1,4 +1,6 @@
 import re
+from random import randbytes
+from urllib.parse import quote
 
 import pytest
 from fastapi.testclient import TestClient
@@ -20,7 +22,7 @@ def get_fake_filecrud():
 
 def get_fake_file(blob_size: int, filename: str):
     return RWFile(
-        blob=(b"\x00" * blob_size * 1024**2),
+        blob=randbytes(blob_size * 1024**2),
         filename=filename,
     )
 
@@ -30,7 +32,7 @@ app.dependency_overrides[get_file] = get_fake_file
 
 
 @pytest.fixture
-def get_client():
+def client():
     SQLModel.metadata.create_all(engine)
     client = TestClient(app)
     yield client
@@ -39,8 +41,8 @@ def get_client():
 
 
 class TestFileRoutes:
-    def test_post_file_ok(self, get_client: TestClient):
-        res = get_client.post(
+    def test_post_file_ok(self, client: TestClient):
+        res = client.post(
             "/file-service/file",
             params={
                 "blob_size": 1,
@@ -52,8 +54,8 @@ class TestFileRoutes:
         assert res.status_code == 201
         assert len(file_id) == FILEID_LEN
 
-    def test_post_file_too_large(self, get_client: TestClient):
-        res = get_client.post(
+    def test_post_file_too_large(self, client: TestClient):
+        res = client.post(
             "/file-service/file",
             params={
                 "blob_size": 3,
@@ -65,9 +67,9 @@ class TestFileRoutes:
         assert res.json()["file_maxsize"] == 2
         assert res.json()["recieved_size"] == 3
 
-    def test_recieve_file_ok(self, get_client: TestClient):
-        body = b"\x00" * 1 * 1024**2
-        filename = "abobus"
+    def test_recieve_file_ok(self, client: TestClient):
+        body = randbytes(1024**2)
+        filename = "або-bus"
         with Session(engine) as sess:
             file_id = FileCRUD(sess).save_file(
                 RWFile(
@@ -76,7 +78,7 @@ class TestFileRoutes:
                 )
             )
 
-        res = get_client.get("/file-service/file", params={"file_id": file_id})
+        res = client.get("/file-service/file", params={"file_id": file_id})
 
         search_res = re.search(
             r'attachment; filename="(.+)"', res.headers["Content-Disposition"]
@@ -86,10 +88,12 @@ class TestFileRoutes:
 
         assert res.status_code == 200
         assert res.content == body
-        assert filename == search_res[1]
+        assert quote(filename, safe="") == search_res[1]
 
-    def test_recieve_file_not_found(self, get_client: TestClient):
-        res = get_client.get("/file-service/file",
-                             params={"file_id": "notexisting"})
+    def test_recieve_file_not_found(self, client: TestClient):
+        res = client.get(
+            "/file-service/file",
+            params={"file_id": "notexisting"}
+        )
 
         assert res.status_code == 404

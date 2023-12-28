@@ -11,7 +11,7 @@ SQLModel.metadata.drop_all(engine)
 
 
 @pytest.fixture
-def get_conn():
+def db_session():
     SQLModel.metadata.create_all(engine)
     with Session(engine) as sess:
         yield sess
@@ -41,9 +41,9 @@ rows = [
 
 
 @pytest.fixture
-def insert_test_data(get_conn: Session):
+def insert_test_data(db_session: Session):
     for id, name, content, time in rows:
-        get_conn.add(
+        db_session.add(
             File(
                 id=id,
                 filename=name,
@@ -51,18 +51,12 @@ def insert_test_data(get_conn: Session):
                 created_at=time,
             )
         )
-    get_conn.commit()
-    return get_conn
-
-
-@pytest.fixture
-def get_filecrud(insert_test_data):
-    return FileCRUD(insert_test_data)
+    db_session.commit()
 
 
 class TestFileCRUD:
-    def test_save_file(self, insert_test_data: Session):
-        crud = FileCRUD(insert_test_data)
+    def test_save_file(self, db_session: Session, insert_test_data):
+        crud = FileCRUD(db_session)
 
         file_id = crud.save_file(
             RWFile(
@@ -75,7 +69,7 @@ class TestFileCRUD:
         for c in file_id:
             assert c in ID_SYMBOLS
         assert (
-            insert_test_data.exec(
+            db_session.exec(
                 select(func.count("*"))
                 .select_from(File)
                 .where(File.filename == "simple_name")
@@ -84,11 +78,11 @@ class TestFileCRUD:
             == 1
         )
 
-    def test_get_file_by_id_ok(self, insert_test_data: Session):
-        crud = FileCRUD(insert_test_data)
+    def test_get_file_by_id_ok(self, db_session: Session, insert_test_data):
+        crud = FileCRUD(db_session)
 
         res = crud.get_file_by_id(ID_SYMBOLS[1] * FILEID_LEN)
-        row_count = insert_test_data.exec(
+        row_count = db_session.exec(
             select(func.count("*"))
             .select_from(File)
             .where(File.id == ID_SYMBOLS[1] * FILEID_LEN)
@@ -101,20 +95,20 @@ class TestFileCRUD:
             and row_count == 0
         )
 
-    def test_get_file_by_id_fail(self, insert_test_data: Session):
-        crud = FileCRUD(insert_test_data)
+    def test_get_file_by_id_fail(self, db_session: Session, insert_test_data):
+        crud = FileCRUD(db_session)
 
         res = crud.get_file_by_id("notexists")
 
         assert res is None
 
-    def test_delete_expired(self, insert_test_data: Session):
-        crud = FileCRUD(insert_test_data)
+    def test_delete_expired(self, db_session: Session, insert_test_data):
+        crud = FileCRUD(db_session)
 
         crud.delete_expired(timedelta(days=1))
 
         assert (
-            insert_test_data.exec(
+            db_session.exec(
                 select(func.count("*"))
                 .select_from(File)
             ).first()
