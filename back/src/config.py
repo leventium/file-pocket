@@ -28,3 +28,6 @@ FILE_MAXSIZE = (
     else 2
 )
 FILE_MAXSIZE_IN_BYTES = FILE_MAXSIZE * 1024**2
+
+EXPIRE_TIME = int(os.getenv("EXPIRE_TIME", "6"))
+CLEANUP_PERIOD = int(os.getenv("CLEANUP_PERIOD", "1"))
