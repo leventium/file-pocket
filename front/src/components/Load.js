@@ -17,21 +17,40 @@ export default function Load() {
     setSelectedFile(event.target.files[0])
   };
 
-  const handleUpload = async () => {
+  const handleUpload = async (e) => {
     if (!selectedFile) {
       alert("Файл не выбран");
       return;
     };
-    
-    setLoadKey('key001');
+
+    e.preventDefault();
+
+  try {
+    let response = await fetch('https://restcountries.com/v4.1/all', {
+      method: 'POST',
+      body: new FormData(formFile)
+    });
+
+
+    if (response.ok) {
+      alert("Файл отправлен");
+      setLoadKey(response.body);
+    }
+    else {
+      alert("Ошибка " + response.status);
+    }
+  } catch (error) {
+    console.log("Возникла проблема с вашим fetch запросом: ", error.message);
+    alert("Возникла проблема с вашим fetch запросом: ", error.message);
+  };
   };
 
   const uploadMore = async () => {
-    setLoadKey(null);
+    setLoadKey('key002');
   }
 
   return (
-    <form action='#' className="form form_load">
+    <form action='#' id="formFile" className="form form_load">
                     <h3 className={hFormTitleClass}>Загрузка файла</h3>
                     <p>
                         <input type="file" onChange={handleChange} className={inputFileClass} placeholder="Загрузить файл" />
