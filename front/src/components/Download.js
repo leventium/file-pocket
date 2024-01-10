@@ -18,23 +18,37 @@ export default function Download() {
     e.preventDefault();
 
     try{
-      let response = await fetch('https://restcountries.com/v4.1/all', {
+      let response = await fetch('https://restcountries.com/v4.1/all' + new URLSearchParams({
+        file_id: downloadKey,
+      }), 
+      {
         method: 'GET',
       });
 
       if (response.ok) {
         alert("Файл получен");
         let data = response.blob();
-        let url = URL.createObjectURL(result);
+        let url = URL.createObjectURL(data);
         console.log(url);
 
         let anchor = document.createElement('a');
         anchor.href = url;
-        anchor.download;
+
+        let header = response.headers.get('Content-Disposition');
+        let parts = header.split(';');
+        let filename = parts[1].split('=')[1];
+        anchor.download = filename;
+
         document.body.append(anchor);
         anchor.style = 'display: none';
         anchor.click();
         anchor.remove();
+      }
+      else if (response.status === 404) {
+        alert("Ошибка! Файл с таким ID (" + downloadKey + ") не найден");
+      }
+      else if (response.status === 422) {
+        alert("Ошибка!: невалидные данные");
       }
       else {
         alert("Ошибка " + response.status);

@@ -31,10 +31,17 @@ export default function Load() {
       body: new FormData(formFile)
     });
 
+    let data = response.json();
 
     if (response.ok) {
       alert("Файл отправлен");
-      setLoadKey(response.body);
+      setLoadKey(data.file_id);
+    }
+    else if (response.status === 400) {
+      alert("Ошибка! Файл слишком большой, допустимый размер файла не больше: " + data.file_maxsize + "; Размер вашего файла: " + data.recieved_size);
+    }
+    else if (response.status === 422) {
+      alert("Ошибка!: невалидные данные");
     }
     else {
       alert("Ошибка " + response.status);
