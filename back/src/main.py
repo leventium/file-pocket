@@ -1,11 +1,11 @@
-import os
 from contextlib import asynccontextmanager
 from multiprocessing import Process
 
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from config import logger, PROXY_PATH
+from config import logger, PROXY_PATH, PORT, DEBUG_MODE
 from metadata import description, tags
 from web.database import engine, init_schema
 from web.routers import file_router
@@ -33,6 +33,19 @@ app.include_router(file_router)
 register_exceptions(app)
 
 
+if DEBUG_MODE:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "http://localhost",
+            "http://localhost:8080",
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+
 if __name__ == "__main__":
     Process(target=cleaner.main).start()
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", "8000")))
+    uvicorn.run(app, host="0.0.0.0", port=PORT)

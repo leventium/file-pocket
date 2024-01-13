@@ -1,6 +1,4 @@
-import sys
 from datetime import timedelta
-from signal import SIGTERM, signal
 from time import sleep
 
 from sqlmodel import Session
@@ -10,8 +8,8 @@ from web.database import engine
 
 
 def main():
+    sleep(10)
     logger.info("Starting file pruning service.")
-    signal(SIGTERM, lambda num, frame: sys.exit())
     with Session(engine) as session:
         crud = FileCRUD(session)
         while True:

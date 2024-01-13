@@ -5,14 +5,15 @@ from loguru import logger
 
 load_dotenv()
 
+DEBUG_MODE = "DEBUG" in os.environ
 
-_LOG_LEVEL = "DEBUG" if "DEBUG" in os.environ else "INFO"
+_LOG_LEVEL = "DEBUG" if DEBUG_MODE else "INFO"
 logger.remove()
 logger.add(sys.stderr, level=_LOG_LEVEL)
 logger.add("logs/info.log", level=_LOG_LEVEL, rotation="10 MB")
 logger.add("logs/error.log", level="ERROR", rotation="10 MB")
 
-
+PORT = int(os.getenv("PORT", "8000"))
 PROXY_PATH = os.getenv("PROXY_PATH", "")
 
 PG_USER = os.getenv("PG_USER", "postgres")
@@ -24,7 +25,7 @@ PG_DB = os.getenv("PG_DB", "postgres")
 FILEID_LEN = int(os.getenv("FILEID_LEN", "10"))
 FILE_MAXSIZE = (
     int(os.getenv("FILE_MAXSIZE", "100"))
-    if "DEBUG" not in os.environ
+    if not DEBUG_MODE
     else 2
 )
 FILE_MAXSIZE_IN_BYTES = FILE_MAXSIZE * 1024**2
