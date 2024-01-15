@@ -43,6 +43,7 @@ if DEBUG_MODE:
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
+        expose_headers=["Content-Disposition"],
     )
 
 
